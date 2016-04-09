@@ -5,12 +5,14 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script type="text/Javascript">
 function update_file_path() {
-$('#main-player').prop("src",$('#filepath').val());
+	var filepath = $('#filepath').val();
+	if (filepath.indexOf("file://") != 0) filepath = "file://" + filepath;
+	$('#main-player').prop("src",filepath);
 }
 </script>
 </head>
 <body>
-File <input type="textbox" id="filepath" name="filepath" onkeydown="update_file_path()" onchange="update_file_path()"></input>
+File <input type="textbox" id="filepath" name="filepath" onkeydown="update_file_path()" onchange="update_file_path()"></input> <br/>
 <audio id="main-player" src="file:///C:/Users/Josh/My%20Tresors/Music/'10s%20Rock/THIRTY%20SECONDS%20TO%20MARS-Up%20In%20The%20Air.mp3" controls></audio>
 </body>
 </html>
