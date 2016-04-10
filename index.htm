@@ -7,6 +7,16 @@
 <script type="text/Javascript">
 var next_id = 0;
 var song_names = {};
+var world = {};
+world.state = "move";
+world.grid = [];
+world.rows = 5;
+world.cols = 5;
+
+for (var i = 0; i < world.rows; i++) {
+	world.grid[i] = [];
+}
+
 
 function add_player_from_data_uri(id, dataURI) {
 	var song_name = song_names[id];
@@ -121,7 +131,7 @@ display:none;
 </style>
 </head>
 <body>
-Drag a local mp3 file to the page to get started
+Drag a local mp3 file to the page to get started. Browser may lag while loading audio.
 <div id="sandbox">
 
 </div>
