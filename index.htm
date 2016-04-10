@@ -13,7 +13,7 @@ world.grid = [];
 world.rows = 5;
 world.cols = 5;
 
-world.paintcolors = ["red","orange","lightblue","lightgreen","white"];
+world.paintcolors = ["red","orange","pink","lightblue","lightgreen","lightgray","white"];
 world.paintcolor = "white";
 
 for (var i = 0; i < world.rows; i++) {
@@ -21,11 +21,11 @@ for (var i = 0; i < world.rows; i++) {
 }
 
 function add_player_from_data_uri(id, dataURI) {
-	var song_name = song_names[id];
+	var song_name = song_names[id].replace(".mp3","");
 	$('#sandbox').append('<div id="player-block'+id+'" class="play-block hidden"></div>');
 	$player_block = $('#player-block'+id);
 	console.debug("creating block");
-	$player_block.html('<span class="name">'+song_name+'</span><br/><br/><span class="play-pause" data-id="'+id+'"><span class="fa fa-play fa-4x"></span></span><audio id="player'+id+'" class="player datauri" src="'+dataURI+'" data-id="'+id+'"></audio><br/>');
+	$player_block.html('<span class="name" contentEditable="true">'+song_name+'</span><br/><br/><span class="play-pause" data-id="'+id+'"><span class="fa fa-play fa-4x"></span></span><audio id="player'+id+'" class="player datauri" src="'+dataURI+'" data-id="'+id+'" controls></audio><br/>');
 	console.debug("created block");
 	
 	$player_block.draggable({ grid: [ 160, 160 ], stack: ".play-block" });
@@ -133,6 +133,16 @@ $(document).ready(function() {
 		world.paintcolor = "white";
 		$('.play-block').off("click");
 	});
+	
+	$('.delete-tool').on("click",function() {
+		world.state="delete";
+		world.paintcolor = "white";
+		$('.play-block').on("click",function() {
+			if (world.state == "delete") {
+				$(this).remove();
+			}
+		});
+	});
 });
 
 </script>
@@ -148,12 +158,17 @@ color:black;
 text-shadow:1px 1px 1px white;
 background-color:white;
 margin:2px;
+overflow: hidden;
 }
 .play-block:hover {
 cursor: move;
 }
 .play-block .play-pause:hover {
 cursor:pointer;
+}
+.play-block audio {
+width:150px;
+display:none;
 }
 .hidden {
 display:none;
@@ -163,12 +178,16 @@ display:none;
 }
 span.name {
 display:inline-block;
-height:1.5em;
+/*height:1.5em;*/
 overflow:hidden;
+pointer:text;
 }
 .tool {
 cursor:pointer;
 margin-left:2px;
+}
+.delete-tool {
+color:red;
 }
 .paint-color {
 display:inline-block;
@@ -177,7 +196,7 @@ text-shadow:1px 1px 1px black;
 </style>
 </head>
 <body>
-Drag a local mp3 file to the page to get started. Browser may lag while loading audio. <span style="float:right;">Tools: <span id="paint-colors"></span><span class="move-tool fa fa-arrows tool"></span></span>
+Drag a local mp3 file to the page to get started. Browser may lag while loading audio. <span style="float:right;">Tools: <span id="paint-colors"></span><span class="move-tool fa fa-arrows tool"></span><span class="delete-tool fa fa-close tool"></span></span>
 <div id="sandbox">
 
 </div>
