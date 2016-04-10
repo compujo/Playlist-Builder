@@ -39,7 +39,7 @@ function add_player_from_data_uri(id, dataURI) {
 	$audio.on("canplay",function() {$('#player-block'+id).removeClass("hidden");});
 	
 	var $play_pause = $('#player-block'+id+' .play-pause');
-	console.debug("adding event listener");
+	//console.debug("adding event listener");
 	$('#player-block'+id+' .play-pause').on("click",function() {
 		var id = $(this).data('id');
 		var $audio = $('#player'+id);
@@ -63,7 +63,7 @@ function add_player_from_data_uri(id, dataURI) {
 			$(this).html('<span class="fa fa-play fa-4x"></span>');
 		}
 	});
-	console.debug("added event listener");
+	//console.debug("added event listener");
 	//console.debug($play_pause);
 }
 
@@ -86,9 +86,9 @@ $(document).on("drop",function(e) {
 		reader.onload = function (event) {
 			add_player_from_data_uri(id, event.target.result);
 		};
-		console.debug("converting file");
+		//console.debug("converting file");
 		reader.readAsDataURL(file);
-		console.debug("converted file");
+		//console.debug("converted file");
 	}
 
 	for (var i = 0; i < e.dataTransfer.files.length; i++) {
