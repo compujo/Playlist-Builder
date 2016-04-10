@@ -13,7 +13,7 @@ function add_player_from_data_uri(id, dataURI) {
 	$('#sandbox').append('<div id="player-block'+id+'" class="play-block hidden"></div>');
 	$player_block = $('#player-block'+id);
 	console.debug("creating block");
-	$player_block.html('<span class="name">'+song_name+'</span><br/><span class="play-pause" data-id="'+id+'">Play</span><audio id="player'+id+'" class="player datauri" src="'+dataURI+'" data-id="'+id+'"></audio><br/>');
+	$player_block.html('<span class="name">'+song_name+'</span><br/><span class="play-pause" data-id="'+id+'"><span class="fa fa-play"></span></span><audio id="player'+id+'" class="player datauri" src="'+dataURI+'" data-id="'+id+'"></audio><br/>');
 	console.debug("created block");
 	$player_block.draggable({ grid: [ 160, 160 ] });
 	
