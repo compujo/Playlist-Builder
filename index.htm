@@ -13,15 +13,10 @@ world.grid = [];
 world.rows = 5;
 world.cols = 5;
 
-world.paintcolors = ["red","lightblue","green","white"];
+world.paintcolors = ["red","orange","lightblue","lightgreen","white"];
 
 for (var i = 0; i < world.rows; i++) {
 	world.grid[i] = [];
-}
-
-for (var i = 0; i < world.paintcolors.length; i++) {
-	var color = world.paintcolors[i];
-	$('#paint-colors').append('<span class="paint-color" style="background-color:'+color+'" data-color="'+color+'"></span>');
 }
 
 function add_player_from_data_uri(id, dataURI) {
@@ -108,6 +103,11 @@ $(document).on("dragover",function(e) {
 
 //On page load
 $(document).ready(function() {
+	for (var i = 0; i < world.paintcolors.length; i++) {
+		var color = world.paintcolors[i];
+		$('#paint-colors').append('<span class="paint-color" style="background-color:'+color+'" data-color="'+color+'"></span>');
+	}
+
 	$('.paint-color').on("click",function() {
 		world.state="paint";
 		world.paintcolor = $(this).data("color");
@@ -155,13 +155,13 @@ overflow:hidden;
 width:20px;
 height:20px;
 display:inline-block;
-border:1px back solid;
+border:1px black solid;
 margin-left:2px;
 }
 </style>
 </head>
 <body>
-Drag a local mp3 file to the page to get started. Browser may lag while loading audio. <div id="paint-colors"></div>
+Drag a local mp3 file to the page to get started. Browser may lag while loading audio. <span id="paint-colors" style="float:right;">Paint: </span>
 <div id="sandbox">
 
 </div>
