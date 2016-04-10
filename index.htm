@@ -17,14 +17,15 @@ function add_player_from_data_uri(id, dataURI, song_name) {
 	var $play_pause = $('#player-block'+id+' .play-pause');
 	$('#player-block'+id+' .play-pause').on("click",function() {
 		var id = $(this).data('id');
-		$audio = $('#player'+id);
+		var $audio = $('#player'+id);
+		var audio = $audio.get(0);
 		
-		if ($audio.get(0).paused) {
-			$audio.get(0).play();
+		if (audio.paused) {
+			audio.play();
 			$(this).html("Pause");
 		}
 		else {
-			$audio.get(0).pause();
+			audio.pause();
 			$(this).html("Play");
 		}
 	});
@@ -80,6 +81,12 @@ cursor: move;
 }
 .play-block .play-pause:hover {
 cursor:pointer;
+}
+.hidden {
+display:none;
+}
+#main-loading {
+
 }
 </style>
 </head>
