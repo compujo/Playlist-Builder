@@ -13,17 +13,23 @@ world.grid = [];
 world.rows = 5;
 world.cols = 5;
 
+world.paintcolors = ["red","lightblue","green","white"];
+
 for (var i = 0; i < world.rows; i++) {
 	world.grid[i] = [];
 }
 
+for (var i = 0; i < world.paintcolors.length; i++) {
+	var color = world.paintcolors[i];
+	$('#paint-colors').append('<span class="paint-color" style="background-color:'+color+'" data-color="'+color+'"></span>');
+}
 
 function add_player_from_data_uri(id, dataURI) {
 	var song_name = song_names[id];
 	$('#sandbox').append('<div id="player-block'+id+'" class="play-block hidden"></div>');
 	$player_block = $('#player-block'+id);
 	console.debug("creating block");
-	$player_block.html('<span class="name">'+song_name+'</span><br/><span class="play-pause" data-id="'+id+'"><span class="fa fa-play"></span></span><audio id="player'+id+'" class="player datauri" src="'+dataURI+'" data-id="'+id+'"></audio><br/>');
+	$player_block.html('<span class="name">'+song_name+'</span><br/><br/><span class="play-pause" data-id="'+id+'"><span class="fa fa-play fa-4x"></span></span><audio id="player'+id+'" class="player datauri" src="'+dataURI+'" data-id="'+id+'"></audio><br/>');
 	console.debug("created block");
 	$player_block.draggable({ grid: [ 160, 160 ] });
 	
@@ -44,15 +50,15 @@ function add_player_from_data_uri(id, dataURI) {
 			$('.player').each(function() {
 				$(this).get(0).pause();
 			});
-			$('.play-pause').html('<span class="fa fa-play"></span>');
+			$('.play-pause').html('<span class="fa fa-play fa-4x"></span>');
 			
 			audio.play();
-			$(this).html('<span class="fa fa-pause"></span>');
+			$(this).html('<span class="fa fa-pause fa-4x"></span>');
 		}
 		else {
 			//--pause song-
 			audio.pause();
-			$(this).html('<span class="fa fa-play"></span>');
+			$(this).html('<span class="fa fa-play fa-4x"></span>');
 		}
 	});
 	console.debug("added event listener");
@@ -83,13 +89,11 @@ $(document).on("drop",function(e) {
 		console.debug("converted file");
 	}
 
-	console.debug("entering for loop");
 	for (var i = 0; i < e.dataTransfer.files.length; i++) {
 		var file = e.dataTransfer.files[i];
 		load_file(file, next_id);
 		next_id++;
 	}
-	console.debug("exited for loop");
 
 	return false;
 });
@@ -104,7 +108,17 @@ $(document).on("dragover",function(e) {
 
 //On page load
 $(document).ready(function() {
-
+	$('.paint-color').on("click",function() {
+		world.state="paint";
+		world.paintcolor = $(this).data("color");
+		$('.play-block').on("click",function() {
+			if (world.state == "paint") {
+				var newcss = {};
+				newcss["background-color"] = world.paintcolor;
+				$(this).css(newcss);
+			}
+		});
+	});
 });
 
 </script>
@@ -115,6 +129,10 @@ border:1px black solid;
 display:inline-block;
 width:150px;
 height:150px;
+text-align:center;
+color:black;
+text-shadow:1px 1px 1px white;
+background-color:lightblue;
 }
 .play-block:hover {
 cursor: move;
@@ -128,10 +146,22 @@ display:none;
 #main-loading {
 
 }
+span.name {
+display:inline-block;
+height:1.5em;
+overflow:hidden;
+}
+.paint-color {
+width:20px;
+height:20px;
+display:inline-block;
+border:1px back solid;
+margin-left:2px;
+}
 </style>
 </head>
 <body>
-Drag a local mp3 file to the page to get started. Browser may lag while loading audio.
+Drag a local mp3 file to the page to get started. Browser may lag while loading audio. <div id="paint-colors"></div>
 <div id="sandbox">
 
 </div>
