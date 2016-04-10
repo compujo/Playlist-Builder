@@ -4,10 +4,16 @@
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script type="text/Javascript">
+var next_id = 0;
+
 function update_file_path() {
 	var filepath = $('#filepath').val();
 	if (filepath.indexOf("file://") != 0) filepath = "file://" + filepath;
 	$('#main-player').prop("src",filepath);
+}
+
+function add_player_from_data_uri(id, dataURI) {
+	$('#sandbox').append('<audio id="player'+id+'" class="player datauri" src="'+dataURI+'" data-id="'+id+'" controls></audio>');
 }
 
 //Drop file event handlers
@@ -17,17 +23,14 @@ $(document).on("drop",function(e) {
 	
 	this.className = '';
 	e.preventDefault();
-	
-	console.log(e.dataTransfer.files);
 
 	for (var i = 0; i < e.dataTransfer.files.length; i++) {
 		var file = e.dataTransfer.files[i],
 			reader = new FileReader();
-		console.log(file);
 		
 		reader.onload = function (event) {
-			console.log(event.target.result);
-			console.log(reader);
+			add_player_from_data_uri(next_id, event.target.result);
+			next_id++;
 		};
 		reader.readAsDataURL(file);
 	}
@@ -53,7 +56,6 @@ $(document).ready(function() {
 <body>
 File <input type="textbox" id="filepath" name="filepath" onkeydown="update_file_path()" onchange="update_file_path()"></input> <br/>
 <audio id="main-player" src="file:///C:/Users/Josh/My%20Tresors/Music/'10s%20Rock/THIRTY%20SECONDS%20TO%20MARS-Up%20In%20The%20Air.mp3" controls></audio>
-<audio id="uploaded-song-template"></audio>
 <div id="sandbox">
 
 </div>
