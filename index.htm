@@ -9,6 +9,37 @@ function update_file_path() {
 	if (filepath.indexOf("file://") != 0) filepath = "file://" + filepath;
 	$('#main-player').prop("src",filepath);
 }
+
+//Drop file event handlers
+$(document).on("drop",function(e) {
+	e = e || window.event;
+	e.dataTransfer = e.originalEvent.dataTransfer;
+	
+	this.className = '';
+	e.preventDefault();
+
+	var file = e.dataTransfer.files[0],
+		reader = new FileReader();
+	console.log(file);
+	reader.onload = function (event) {
+		event.target.result
+	};
+	console.log(reader.readAsDataURL(file));
+
+	return false;
+});
+$(document).on("dragover",function(e) {
+	e = e || window.event;
+    e.stopPropagation();
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+});
+
+//On page load
+$(document).ready(function() {
+
+});
+
 </script>
 </head>
 <body>
