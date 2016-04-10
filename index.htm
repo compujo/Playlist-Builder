@@ -1,7 +1,6 @@
 <html>
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
@@ -11,7 +10,7 @@ var song_names = {};
 
 function add_player_from_data_uri(id, dataURI) {
 	var song_name = song_names[id];
-	$('#sandbox').append('<div id="player-block'+id+'" class="play-block"></div>');
+	$('#sandbox').append('<div id="player-block'+id+'" class="play-block hidden"></div>');
 	$player_block = $('#player-block'+id);
 	console.debug("creating block");
 	$player_block.html('<span class="name">'+song_name+'</span><br/><span class="play-pause" data-id="'+id+'">Play</span><audio id="player'+id+'" class="player datauri" src="'+dataURI+'" data-id="'+id+'"></audio><br/>');
@@ -19,7 +18,7 @@ function add_player_from_data_uri(id, dataURI) {
 	$player_block.draggable({ grid: [ 160, 160 ] });
 	
 	var $audio = $('#player'+id);
-	$audio.ready(function() {console.debug("loaded audio");});
+	$audio.on("canplay",function() {$('#player-block'+id).removeClass("hidden");});
 	
 	var $play_pause = $('#player-block'+id+' .play-pause');
 	console.debug("adding event listener");
@@ -35,15 +34,15 @@ function add_player_from_data_uri(id, dataURI) {
 			$('.player').each(function() {
 				$(this).get(0).pause();
 			});
-			$('.play-pause').html("Play");
+			$('.play-pause').html('<span class="fa fa-play"></span>');
 			
 			audio.play();
-			$(this).html("Pause");
+			$(this).html('<span class="fa fa-pause"></span>');
 		}
 		else {
 			//--pause song-
 			audio.pause();
-			$(this).html("Play");
+			$(this).html('<span class="fa fa-play"></span>');
 		}
 	});
 	console.debug("added event listener");
