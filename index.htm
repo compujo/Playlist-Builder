@@ -5,12 +5,14 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script type="text/Javascript">
 var next_id = 0;
+var song_names = {};
 
-function add_player_from_data_uri(id, dataURI, song_name) {
+function add_player_from_data_uri(id, dataURI) {
+	var song_name = song_names[id];
 	$('#sandbox').append('<div id="player-block'+id+'" class="play-block"></div>');
 	$player_block = $('#player-block'+id);
 	
-	$player_block.html('<span class="name">'+song_name+'</span><br/><span class="play-pause" data-id="'+id+'">Play</span><br/><audio id="player'+id+'" class="player datauri" src="'+dataURI+'" data-id="'+id+'"></audio><br/>');
+	$player_block.html('<span class="name">'+song_name+'</span><br/><span class="play-pause" data-id="'+id+'">Play</span><audio id="player'+id+'" class="player datauri" src="'+dataURI+'" data-id="'+id+'"></audio><br/>');
 	$player_block.draggable({ grid: [ 80, 80 ] });
 	
 	var $audio = $('#player'+id);
@@ -21,10 +23,19 @@ function add_player_from_data_uri(id, dataURI, song_name) {
 		var audio = $audio.get(0);
 		
 		if (audio.paused) {
+			//-play song-
+			
+			//pause other songs
+			$('.player').each(function() {
+				$(this).get(0).pause();
+			});
+			$('.play-pause').html("Play");
+			
 			audio.play();
 			$(this).html("Pause");
 		}
 		else {
+			//--pause song-
 			audio.pause();
 			$(this).html("Play");
 		}
@@ -39,18 +50,26 @@ $(document).on("drop",function(e) {
 	
 	this.className = '';
 	e.preventDefault();
-
-	for (var i = 0; i < e.dataTransfer.files.length; i++) {
-		var file = e.dataTransfer.files[i],
-			reader = new FileReader();
+	
+	var files = e.dataTransfer.files;
+	
+	function load_file(file, id) {
+		var reader = new FileReader();
+			
+		song_names[id] = file.name;
 		//console.log(file);
 		
 		reader.onload = function (event) {
 			//console.log(event.target);
-			add_player_from_data_uri(next_id, event.target.result,file.name);
-			next_id++;
+			add_player_from_data_uri(id, event.target.result);
 		};
 		reader.readAsDataURL(file);
+	}
+
+	for (var i = 0; i < e.dataTransfer.files.length; i++) {
+		var file = e.dataTransfer.files[i];
+		load_file(file, next_id);
+		next_id++;
 	}
 
 	return false;
