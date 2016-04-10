@@ -1,5 +1,7 @@
 <html>
 <head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
@@ -11,16 +13,16 @@ function add_player_from_data_uri(id, dataURI) {
 	var song_name = song_names[id];
 	$('#sandbox').append('<div id="player-block'+id+'" class="play-block"></div>');
 	$player_block = $('#player-block'+id);
-	console.log("creating block");
+	console.debug("creating block");
 	$player_block.html('<span class="name">'+song_name+'</span><br/><span class="play-pause" data-id="'+id+'">Play</span><audio id="player'+id+'" class="player datauri" src="'+dataURI+'" data-id="'+id+'"></audio><br/>');
-	console.log("created block");
-	$player_block.draggable({ grid: [ 150, 150 ] });
+	console.debug("created block");
+	$player_block.draggable({ grid: [ 160, 160 ] });
 	
 	var $audio = $('#player'+id);
-	$audio.ready(function() {console.log("loaded audio");});
+	$audio.ready(function() {console.debug("loaded audio");});
 	
 	var $play_pause = $('#player-block'+id+' .play-pause');
-	console.log("adding event listener");
+	console.debug("adding event listener");
 	$('#player-block'+id+' .play-pause').on("click",function() {
 		var id = $(this).data('id');
 		var $audio = $('#player'+id);
@@ -44,8 +46,8 @@ function add_player_from_data_uri(id, dataURI) {
 			$(this).html("Play");
 		}
 	});
-	console.log("added event listener");
-	//console.log($play_pause);
+	console.debug("added event listener");
+	//console.debug($play_pause);
 }
 
 //Drop file event handlers
@@ -62,24 +64,23 @@ $(document).on("drop",function(e) {
 		var reader = new FileReader();
 			
 		song_names[id] = file.name;
-		//console.log(file);
+		//console.debug(file);
 		
 		reader.onload = function (event) {
-			//console.log(event.target);
 			add_player_from_data_uri(id, event.target.result);
 		};
-		console.log("converting file");
+		console.debug("converting file");
 		reader.readAsDataURL(file);
-		console.log("converted file");
+		console.debug("converted file");
 	}
 
-	console.log("entering for loop");
+	console.debug("entering for loop");
 	for (var i = 0; i < e.dataTransfer.files.length; i++) {
 		var file = e.dataTransfer.files[i];
 		load_file(file, next_id);
 		next_id++;
 	}
-	console.log("exited for loop");
+	console.debug("exited for loop");
 
 	return false;
 });
