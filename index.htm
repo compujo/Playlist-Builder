@@ -6,9 +6,29 @@
 <script type="text/Javascript">
 var next_id = 0;
 
-function add_player_from_data_uri(id, dataURI) {
-	$('#sandbox').append('<div id="player-block'+id+'"></div>');
-	$('#player-block'+id).html('<audio id="player'+id+'" class="player datauri" src="'+dataURI+'" data-id="'+id+'" controls></audio><br/>');
+function add_player_from_data_uri(id, dataURI, song_name) {
+	$('#sandbox').append('<div id="player-block'+id+'" class="play-block"></div>');
+	$player_block = $('#player-block'+id);
+	
+	$player_block.html('<span class="name">'+song_name+'</span><br/><span class="play-pause" data-id="'+id+'">Play</span><br/><audio id="player'+id+'" class="player datauri" src="'+dataURI+'" data-id="'+id+'"></audio><br/>');
+	$player_block.draggable({ grid: [ 80, 80 ] });
+	
+	var $audio = $('#player'+id);
+	var $play_pause = $('#player-block'+id+' .play-pause');
+	$('#player-block'+id+' .play-pause').on("click",function() {
+		var id = $(this).data('id');
+		$audio = $('#player'+id);
+		
+		if ($audio.get(0).paused) {
+			$audio.get(0).play();
+			$(this).html("Pause");
+		}
+		else {
+			$audio.get(0).pause();
+			$(this).html("Play");
+		}
+	});
+	console.log($play_pause);
 }
 
 //Drop file event handlers
@@ -22,9 +42,11 @@ $(document).on("drop",function(e) {
 	for (var i = 0; i < e.dataTransfer.files.length; i++) {
 		var file = e.dataTransfer.files[i],
 			reader = new FileReader();
+		//console.log(file);
 		
 		reader.onload = function (event) {
-			add_player_from_data_uri(next_id, event.target.result);
+			//console.log(event.target);
+			add_player_from_data_uri(next_id, event.target.result,file.name);
 			next_id++;
 		};
 		reader.readAsDataURL(file);
@@ -47,6 +69,19 @@ $(document).ready(function() {
 });
 
 </script>
+<style>
+.play-block {
+padding:4px;
+border:1px black solid;
+display:inline-block;
+}
+.play-block:hover {
+cursor: move;
+}
+.play-block .play-pause:hover {
+cursor:pointer;
+}
+</style>
 </head>
 <body>
 Drag a local mp3 file to the page to get started
