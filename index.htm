@@ -14,6 +14,7 @@ world.rows = 5;
 world.cols = 5;
 
 world.paintcolors = ["red","orange","lightblue","lightgreen","white"];
+world.paintcolor = "white";
 
 for (var i = 0; i < world.rows; i++) {
 	world.grid[i] = [];
@@ -26,7 +27,13 @@ function add_player_from_data_uri(id, dataURI) {
 	console.debug("creating block");
 	$player_block.html('<span class="name">'+song_name+'</span><br/><br/><span class="play-pause" data-id="'+id+'"><span class="fa fa-play fa-4x"></span></span><audio id="player'+id+'" class="player datauri" src="'+dataURI+'" data-id="'+id+'"></audio><br/>');
 	console.debug("created block");
-	$player_block.draggable({ grid: [ 160, 160 ] });
+	
+	$player_block.draggable({ grid: [ 160, 160 ], stack: ".play-block" });
+	
+	//Set initial background color
+	var newcss = {};
+	newcss["background-color"] = world.paintcolor;
+	$player_block.css(newcss);
 	
 	var $audio = $('#player'+id);
 	$audio.on("canplay",function() {$('#player-block'+id).removeClass("hidden");});
@@ -103,9 +110,10 @@ $(document).on("dragover",function(e) {
 
 //On page load
 $(document).ready(function() {
+	//-Tools init-
 	for (var i = 0; i < world.paintcolors.length; i++) {
 		var color = world.paintcolors[i];
-		$('#paint-colors').append('<span class="paint-color" style="background-color:'+color+'" data-color="'+color+'"></span>');
+		$('#paint-colors').append('<span class="paint-color fa fa-paint-brush tool" style="color:'+color+'" data-color="'+color+'"></span>');
 	}
 
 	$('.paint-color').on("click",function() {
@@ -119,12 +127,18 @@ $(document).ready(function() {
 			}
 		});
 	});
+	
+	$('.move-tool').on("click",function() {
+		world.state="move";
+		world.paintcolor = "white";
+		$('.play-block').off("click");
+	});
 });
 
 </script>
 <style>
 .play-block {
-padding:4px;
+padding:2px;
 border:1px black solid;
 display:inline-block;
 width:150px;
@@ -132,7 +146,8 @@ height:150px;
 text-align:center;
 color:black;
 text-shadow:1px 1px 1px white;
-background-color:lightblue;
+background-color:white;
+margin:2px;
 }
 .play-block:hover {
 cursor: move;
@@ -151,17 +166,18 @@ display:inline-block;
 height:1.5em;
 overflow:hidden;
 }
-.paint-color {
-width:20px;
-height:20px;
-display:inline-block;
-border:1px black solid;
+.tool {
+cursor:pointer;
 margin-left:2px;
+}
+.paint-color {
+display:inline-block;
+text-shadow:1px 1px 1px black;
 }
 </style>
 </head>
 <body>
-Drag a local mp3 file to the page to get started. Browser may lag while loading audio. <span id="paint-colors" style="float:right;">Paint: </span>
+Drag a local mp3 file to the page to get started. Browser may lag while loading audio. <span style="float:right;">Tools: <span id="paint-colors"></span><span class="move-tool fa fa-arrows tool"></span></span>
 <div id="sandbox">
 
 </div>
