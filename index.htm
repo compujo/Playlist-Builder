@@ -119,6 +119,7 @@ $(document).ready(function() {
 	$('.paint-color').on("click",function() {
 		world.state="paint";
 		world.paintcolor = $(this).data("color");
+		$('body').css({cursor:"auto"});
 		$('.play-block').on("click",function() {
 			if (world.state == "paint") {
 				var newcss = {};
@@ -131,12 +132,14 @@ $(document).ready(function() {
 	$('.move-tool').on("click",function() {
 		world.state="move";
 		world.paintcolor = "white";
+		$('body').css({cursor:"move"});
 		$('.play-block').off("click");
 	});
 	
 	$('.delete-tool').on("click",function() {
 		world.state="delete";
 		world.paintcolor = "white";
+		$('body').css({cursor:"no-drop"});
 		$('.play-block').on("click",function() {
 			if (world.state == "delete") {
 				$(this).remove();
@@ -161,7 +164,7 @@ margin:2px;
 overflow: hidden;
 }
 .play-block:hover {
-cursor: move;
+/*cursor: move;*/
 }
 .play-block .play-pause:hover {
 cursor:pointer;
